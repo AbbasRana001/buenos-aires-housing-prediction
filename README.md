@@ -71,39 +71,7 @@ python -m ipykernel install --user --name buenos-aires-housing --display-name "B
 
 Select the **Buenos Aires Housing** kernel in your notebook interface. Read the notebooks in order, 01 → 04; each reconstructs its data and models rather than loading another notebook's kernel state.
 
-### Kernel Working Directories
-
-| Notebooks | Required kernel working directory | Data path |
-|---|---|---|
-| 1–2 | Repository's `notebooks/` directory | `../data/` |
-| 3–4 | Repository root | `data/` |
-
-Starting Jupyter from the repository root does **not** by itself guarantee the kernel directory. Verify it with `Path.cwd()` from `pathlib` in your interface's console, and configure the directory before running cells. Notebooks 3–4 also import `src.wrangle` from the repository root.
-
-For execution with explicitly controlled directories, start `python` in the repository root after the setup above and paste the following. It runs each notebook in a fresh kernel and refreshes its saved outputs; the Lasso search can take several minutes.
-
-```python
-from pathlib import Path
-import nbformat
-from nbclient import NotebookClient
-
-root = Path.cwd()
-for path in sorted((root / "notebooks").glob("*.ipynb")):
-    cwd = path.parent if path.name.startswith(("01_", "02_")) else root
-    notebook = nbformat.read(path, as_version=4)
-    NotebookClient(
-        notebook,
-        kernel_name="buenos-aires-housing",
-        timeout=1800,
-        resources={"metadata": {"path": str(cwd)}},
-    ).execute()
-    nbformat.write(notebook, path)
-    print(f"Executed {path.name}")
-```
-
-`nbformat`, `nbclient`, and the kernel tooling used here are supplied by the Jupyter environment; they are not added to the analysis requirements. Version lower bounds do not pin an exact environment, so dependency changes may affect numerical results.
-
-### Public Project Structure
+## Public Project Structure
 
 ```text
 buenos-aires-housing-prediction/
@@ -134,5 +102,4 @@ Please do not copy, fork, or submit any code from this repository as your own co
 ## License and Data Provenance
 
 The repository's code is offered under the [MIT License](LICENSE). This does not establish a license for third-party datasets or instructional materials.
-
-The five CSVs were supplied for the learning project and contain `properati_url` listing links. The repository owner has confirmed that publication of the WQU portfolio work and the included datasets is permitted. This confirmation does not specify a dataset license or broader reuse terms; the MIT code license should not be treated as a license for the CSVs.
+The five CSVs were supplied for the learning project and contain `properati_url` listing links. The MIT code license should not be treated as a license for the CSVs.
