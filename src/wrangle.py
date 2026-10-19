@@ -3,7 +3,7 @@ from glob import glob
 
 def merged_files(data):
     """Merge multiple CSV files matching a pattern into a single DataFrame."""
-    return pd.concat([pd.read_csv(file) for file in glob(data)], ignore_index=True)
+    return pd.concat([pd.read_csv(file) for file in sorted((data))], ignore_index=True)
 
 def filter_df(data):
     """Subset data: Apartments in "Capital Federal", less than $400,000"""
@@ -15,7 +15,7 @@ def filter_df(data):
     )
 
 def outliers_df(data):
-    """Remove outliers by surface_covered_in_m2 (keep middle 90%)"""
+    """Remove outliers by surface_covered_in_m2 (keep middle 80%)"""
     return (
         data
         .loc[lambda x: x["surface_covered_in_m2"].between(
